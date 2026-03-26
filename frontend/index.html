@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RBAC Prototype</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-title">RBAC Prototype</div>
+      <div class="topbar-right">
+        <span id="healthStatus" class="health-pill health-offline">
+          <span class="health-dot"></span>
+          disconnected
+        </span>
+        <span id="currentRoleBadge" class="role-badge role-viewer">Viewer</span>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar">
+        <div class="session-card">
+          <p class="section-label">Demo Users</p>
+          <div class="role-buttons">
+            <button class="role-btn" onclick="login('admin')">Admin</button>
+            <button class="role-btn" onclick="login('editor')">Editor</button>
+            <button class="role-btn" onclick="login('viewer')">Viewer</button>
+          </div>
+          <p id="status" class="status-text">Not logged in</p>
+          <p id="permText" class="status-text muted"></p>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button id="thingsTab" class="tab active" onclick="showThingsView()">Things</button>
+          <button id="auditTab" class="tab" onclick="showAuditView()">Audit Logs</button>
+          <button id="matrixTab" class="tab" onclick="showMatrixView()">Permission Matrix</button>
+        </nav>
+      </aside>
+
+      <main class="main-area">
+        <div class="content-wrap">
+          <p id="errorText" class="error hidden"></p>
+
+          <section id="thingsView" class="card">
+            <div class="card-header">
+              <h2>Things</h2>
+              <div id="createSection" class="create-controls hidden">
+                <input id="thingName" placeholder="Thing name" />
+                <select id="thingVisibility">
+                  <option value="public">public</option>
+                  <option value="private">private</option>
+                </select>
+                <button id="createBtn" onclick="createThing()">Create</button>
+              </div>
+            </div>
+
+            <div id="editSection" class="edit-controls hidden">
+              <input id="editThingName" placeholder="Updated thing name" />
+              <button onclick="saveUpdateThing()">Save</button>
+              <button class="ghost-btn" onclick="cancelUpdateThing()">Cancel</button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Owner</th>
+                    <th>Visibility</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="thingsBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="auditView" class="card hidden">
+            <div class="card-header">
+              <h2>Audit Logs</h2>
+              <div class="audit-controls">
+                <input id="auditLimit" type="number" min="1" max="200" value="25" />
+                <button onclick="loadAudit()">Refresh</button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Actor</th>
+                    <th>Event</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="auditBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="matrixView" class="card hidden">
+            <div class="card-header">
+              <h2>Permission Matrix</h2>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Role</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="matrixBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

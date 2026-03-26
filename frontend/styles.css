@@ -1,0 +1,346 @@
+:root {
+  --green-primary: #0f3d2e;
+  --green-accent: #1f7a63;
+  --bg: #f5f7f6;
+  --card: #ffffff;
+  --text: #111111;
+  --text-muted: #333333;
+  --border: #d9dfdc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 60px;
+  padding: 0 20px;
+  background: var(--green-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.health-pill {
+  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.health-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b3b3b3;
+}
+
+.health-online .health-dot {
+  background: #8fd2bc;
+}
+
+.health-online {
+  background: rgba(143, 210, 188, 0.12);
+}
+
+.health-offline {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.role-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  text-transform: capitalize;
+}
+
+.role-admin {
+  background: var(--green-primary);
+  color: #fff;
+}
+
+.role-editor {
+  background: var(--green-accent);
+  color: #fff;
+}
+
+.role-viewer {
+  background: #e5e7eb;
+  color: #333;
+  border-color: #d1d5db;
+}
+
+.app-body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 60px);
+}
+
+.sidebar {
+  background: var(--green-primary);
+  color: #fff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.session-card {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.section-label {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.role-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.role-btn {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.status-text {
+  margin: 10px 0 0;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.status-text.muted {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tab {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tab.active {
+  background: var(--green-accent);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.18);
+  font-weight: 600;
+}
+
+.main-area {
+  background: #0b0f0d;
+  padding: 20px;
+}
+
+.content-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: #111111;
+  border: 1px solid #2a2f2d;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+  padding: 16px;
+  color: #f3f4f6;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #f3f4f6;
+}
+
+.create-controls,
+.edit-controls,
+.audit-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.edit-controls {
+  margin-bottom: 10px;
+}
+
+.main-area input,
+.main-area select,
+.main-area button {
+  font: inherit;
+  padding: 7px 10px;
+  border: 1px solid #3a4240;
+  border-radius: 8px;
+  background: #161a18;
+  color: #f3f4f6;
+}
+
+.main-area button {
+  cursor: pointer;
+}
+
+.main-area button:hover {
+  border-color: #4a5653;
+  background: #1d2321;
+}
+
+.ghost-btn {
+  background: #131816;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background: #161b19;
+  color: #d1d5db;
+  font-weight: 600;
+  border-bottom: 1px solid #2a2f2d;
+  border-top: 1px solid #2a2f2d;
+  text-align: left;
+  padding: 10px;
+}
+
+tbody td {
+  border-bottom: 1px solid #2a2f2d;
+  padding: 10px;
+  color: #f3f4f6;
+}
+
+tbody tr:hover {
+  background: #171d1b;
+}
+
+td .actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-label {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-block;
+  border: 1px solid #3c4542;
+  background: #1a211f;
+  color: #d1d5db;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.76rem;
+}
+
+.event-pill {
+  border-color: #2a5c4f;
+  background: #16342b;
+  color: #8fd2bc;
+}
+
+.error {
+  margin: 0;
+  border: 1px solid #6a2f2f;
+  background: #2a1717;
+  color: #fca5a5;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.hidden {
+  display: none;
+}
+
+.hidden-force {
+  display: none !important;
+}
+
+@media (max-width: 980px) {
+  .app-body {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .tab {
+    white-space: nowrap;
+  }
+}
