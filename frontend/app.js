@@ -69,6 +69,13 @@ function normalizeRole(userLabel) {
   return userLabel;
 }
 
+function updateRoleButtons(userLabel) {
+  const buttons = document.querySelectorAll(".role-btn[data-role]");
+  buttons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.role === userLabel);
+  });
+}
+
 function updateRoleBadge() {
   const badge = document.getElementById("currentRoleBadge");
   if (!badge) return;
@@ -138,6 +145,7 @@ async function login(userLabel) {
   clearError();
   currentUser = userLabel;
   role = normalizeRole(userLabel);
+  updateRoleButtons(userLabel);
   updateRoleBadge();
   document.getElementById("status").textContent = `Logged in as ${currentUser} (role: ${role})`;
 

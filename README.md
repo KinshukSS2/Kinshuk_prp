@@ -1,116 +1,128 @@
-# RBAC Prototype (Standalone)
+# RBAC Prototype (Standalone Submission)
 
-This prototype is isolated from the main istSOS services and demonstrates:
+Hi! This is a small, standalone RBAC prototype I built to demonstrate end-to-end role-based behavior with PostgreSQL RLS and a role-aware admin dashboard UI.
+
+The core idea is simple:
 
 `Login -> Role -> SET LOCAL ROLE -> RLS -> Filtered Data -> UI adapts`
 
-## Structure
+## What this prototype shows
 
-- `backend/` FastAPI + asyncpg
-- `database/` schema + RLS policies
-- `frontend/` minimal role-aware UI
-- `docker-compose.yml` isolated PostgreSQL service
+- Role-based access enforced in the database using PostgreSQL RLS
+- Frontend UI that changes immediately based on role
+- Admin-only audit log visibility
+- A clear Permission Matrix panel for quick reference
 
-## 1) Start isolated database
+## Project layout
+
+- [backend](backend): FastAPI + asyncpg
+- [database](database): schema, roles, grants, and RLS policies
+- [frontend](frontend): dashboard UI (Things, Audit Logs, Permission Matrix)
+- [docker-compose.yml](docker-compose.yml): isolated PostgreSQL service
+
+## Quick setup
+
+Start from this folder:
 
 ```bash
-cd /home/deadpool/ist/istSOS4/rbac-prototype
+cd /home/deadpool/ist/rbac-prototype-submission
+```
+
+### 1) Start PostgreSQL
+
+```bash
 docker compose up -d
 ```
 
-## 2) Apply SQL (schema then policies)
+### 2) Apply DB schema and policies
 
 ```bash
 psql "postgresql://postgres:postgres@localhost:55432/rbac_prototype" -f database/schema.sql
 psql "postgresql://postgres:postgres@localhost:55432/rbac_prototype" -f database/policies.sql
 ```
 
-## 3) Run backend
+### 3) Start backend
 
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate
+source /home/deadpool/ist/istSOS4/.venv/bin/activate
 pip install -r requirements.txt
 export RBAC_DATABASE_URL="postgresql://rbac_app:rbac_app_pass@localhost:55432/rbac_prototype"
 uvicorn main:app --reload --port 8001
 ```
 
-## 4) Run frontend
+### 4) Start frontend
 
 Open a new terminal:
 
 ```bash
-cd /home/deadpool/ist/istSOS4/rbac-prototype/frontend
+cd /home/deadpool/ist/rbac-prototype-submission/frontend
 python -m http.server 5174
 ```
 
-Open: `http://localhost:5174`
+Then open: `http://localhost:5174`
 
-## Day mapping
+## 5-minute reviewer flow
 
-- Day 1: `database/schema.sql`, `database/policies.sql`
-- Day 2: `backend/main.py`, `backend/auth.py`, `backend/permissions.py`, `backend/db.py`
-- Day 3: `frontend/index.html`, `frontend/app.js`
-- Day 4: `GET /permissions/matrix`
-- Day 5: `AuditLog` + write/read endpoints
+If you’re reviewing quickly, here’s the easiest path:
 
-## Quick API checks
+1. Login as **Viewer**
+   - Sees only public rows
+   - No create/update/delete actions
+   - Audit Logs tab is hidden
+
+2. Login as **Editor**
+   - Can create
+   - Can update only own rows
+   - Cannot delete
+   - Audit Logs tab is hidden
+
+3. Login as **Admin**
+   - Full CRUD on Things
+   - Audit Logs tab is visible and loads data
+
+4. Open **Permission Matrix**
+   - Shows the role-to-action mapping clearly
+
+## API endpoints used by UI
+
+- `GET /health`
+- `GET /permissions?user=<admin|editor|viewer>`
+- `GET /permissions/matrix`
+- `GET /things?user=<...>`
+- `POST /things?user=<...>`
+- `PATCH /things/{id}?user=<...>`
+- `DELETE /things/{id}?user=<...>`
+- `GET /audit?user=<...>&limit=<1..200>`
+
+## RBAC behavior summary
+
+- **viewer**: read public Things only
+- **editor**: read public + own, create/update own, no delete
+- **administrator**: full CRUD + audit read
+
+Audit access is enforced on the backend (`403` for non-admin), and the Audit tab is hidden in the UI for non-admin users.
+
+## Quick validation commands
 
 ```bash
-curl "http://localhost:8001/permissions?user=viewer"
-curl "http://localhost:8001/permissions?user=editor"
+curl "http://localhost:8001/health"
 curl "http://localhost:8001/permissions?user=admin"
-
 curl "http://localhost:8001/things?user=viewer"
-curl "http://localhost:8001/things?user=editor"
-curl "http://localhost:8001/things?user=admin"
-
-curl "http://localhost:8001/permissions/matrix"
-curl "http://localhost:8001/audit"
+curl "http://localhost:8001/audit?user=admin&limit=5"
+curl -i "http://localhost:8001/audit?user=viewer&limit=5"
 ```
 
-## Expected behavior
-
-- `viewer`: can only read public rows
-- `editor`: can read public + own rows, create/update own, cannot delete
-- `administrator`: full CRUD and audit read
+Expected: the last command should return `403`.
 
 ## Troubleshooting
 
-If the page loads but role buttons appear to do nothing:
-
-1. Check backend is running:
+- If the UI appears unresponsive, first check backend:
 
 ```bash
 curl http://localhost:8001/health
 ```
 
-Expected: `{"status":"ok"}`
-
-2. Verify frontend can reach backend from browser:
-- Open the page and click a role button.
-- If there is a problem, an error message now appears directly on the page.
-
-3. Confirm DB schema and policies were applied in order:
-
-```bash
-psql "postgresql://postgres:postgres@localhost:55432/rbac_prototype" -f database/schema.sql
-psql "postgresql://postgres:postgres@localhost:55432/rbac_prototype" -f database/policies.sql
-```
-
-4. Restart backend after code changes:
-
-```bash
-cd backend
-source .venv/bin/activate
-uvicorn main:app --reload --port 8001
-```
-
-5. Hard refresh frontend (`Ctrl+Shift+R`) to reload updated JS/CSS.
-
-Common causes:
-- Backend not running on `http://localhost:8001`
-- Database container not healthy
-- SQL files not applied (or applied in wrong order)
-- Stale browser assets after frontend changes
+- If frontend changes don’t appear, do a hard refresh (`Ctrl+Shift+R`).
+- If data looks inconsistent, re-run schema then policies in that order.
+- If port `8001` is occupied, stop the running process and restart uvicorn.

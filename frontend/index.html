@@ -24,9 +24,9 @@
         <div class="session-card">
           <p class="section-label">Demo Users</p>
           <div class="role-buttons">
-            <button class="role-btn" onclick="login('admin')">Admin</button>
-            <button class="role-btn" onclick="login('editor')">Editor</button>
-            <button class="role-btn" onclick="login('viewer')">Viewer</button>
+            <button class="role-btn" data-role="admin" onclick="login('admin')">Admin</button>
+            <button class="role-btn" data-role="editor" onclick="login('editor')">Editor</button>
+            <button class="role-btn" data-role="viewer" onclick="login('viewer')">Viewer</button>
           </div>
           <p id="status" class="status-text">Not logged in</p>
           <p id="permText" class="status-text muted"></p>
